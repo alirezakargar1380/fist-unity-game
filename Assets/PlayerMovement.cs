@@ -40,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, 7f);
         }
 
-        Debug.Log(IsGround());
+        // Debug.Log(startGame);
         UpdateAnimationState();
     }
 
@@ -50,15 +50,24 @@ public class PlayerMovement : MonoBehaviour
 
         if (!IsGround() && !startGame)
         {
-            if (IsGround())
-            {
-                startGame = true;
-                // state = MovementState.stay;
-            }
-            
-            // Debug.Log("game not started yet");
+            rb.gravityScale = 0.2f;
             state = MovementState.jumping;
+            anim.SetInteger("state", (int)state);
+            return;
         }
+
+        if (IsGround() && !startGame)
+        {
+            startGame = true;
+            state = MovementState.stay;
+            anim.SetInteger("state", (int)state);
+        }
+
+        //if (startGame)
+        //{
+        //    Debug.Log("game started!");
+        //    rb.gravityScale = 1;
+        //}
 
         if (dirX > 0f)
         {
