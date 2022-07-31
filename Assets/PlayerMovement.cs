@@ -4,20 +4,27 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private SpriteRenderer sprite;
     private Rigidbody2D rb;
+    private BoxCollider2D coll;
+    private SpriteRenderer sprite;
     private Animator anim;
     float dirX = 0f;
+    private bool startGame;
 
     private enum MovementState { stay, walking, jumping }
     // private MovementState state = MovementState.stay;
+
+    [SerializeField] private LayerMask jumpableGround;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        coll = GetComponent<BoxCollider2D>();
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        startGame = false;
+        Debug.Log(jumpableGround);
     }
 
     // Update is called once per frame
@@ -27,7 +34,13 @@ public class PlayerMovement : MonoBehaviour
         // setup movement
         rb.velocity = new Vector2(dirX * 7f, rb.velocity.y);
 
-        // Debug.Log(dirX);
+        if (Input.GetKey("space"))
+        {
+            // Debug.Log(IsGround());
+            rb.velocity = new Vector2(rb.velocity.x, 7f);
+        }
+
+        Debug.Log(IsGround());
         UpdateAnimationState();
     }
 
@@ -35,9 +48,16 @@ public class PlayerMovement : MonoBehaviour
     {
         MovementState state;
 
-        if (Input.GetKey("space"))
+        if (!IsGround() && !startGame)
         {
-            rb.velocity = new Vector2(rb.velocity.x, 7f);
+            if (IsGround())
+            {
+                startGame = true;
+                // state = MovementState.stay;
+            }
+            
+            // Debug.Log("game not started yet");
+            state = MovementState.jumping;
         }
 
         if (dirX > 0f)
@@ -61,5 +81,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         anim.SetInteger("state", (int)state);
+    }
+
+    private bool IsGround()
+    {
+        return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
     }
 }
