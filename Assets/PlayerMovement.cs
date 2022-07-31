@@ -24,7 +24,6 @@ public class PlayerMovement : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         startGame = false;
-        Debug.Log(jumpableGround);
     }
 
     // Update is called once per frame
@@ -36,7 +35,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey("space"))
         {
-            // Debug.Log(IsGround());
             rb.velocity = new Vector2(rb.velocity.x, 7f);
         }
 
@@ -58,16 +56,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (IsGround() && !startGame)
         {
+            rb.gravityScale = 1;
             startGame = true;
             state = MovementState.stay;
             anim.SetInteger("state", (int)state);
         }
-
-        //if (startGame)
-        //{
-        //    Debug.Log("game started!");
-        //    rb.gravityScale = 1;
-        //}
 
         if (dirX > 0f)
         {
