@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
     {
         dirX = Input.GetAxis("Horizontal");
         // setup movement
-        rb.velocity = new Vector2(dirX * 7f, rb.velocity.y);
+        rb.velocity = new Vector2(dirX * 14f, rb.velocity.y);
 
         if (Input.GetKey("space"))
         {
@@ -65,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
         if (dirX > 0f)
         {
             state = MovementState.walking;
+            Debug.Log(sprite);
             sprite.flipX = false;
         }
         else if (dirX < 0f)
